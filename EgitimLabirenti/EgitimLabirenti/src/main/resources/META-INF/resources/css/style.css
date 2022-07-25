@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.ui-menu {
+	font-size: 12px;
+}
+
+form {
+	font-size: 12px;
+}
+
+.menuBar > ul > li:last-child {
+	position: fixed;
+	right: 2%;
+}
+
+.col25 {
+	width: 25% !important;
+	text-align: left;
+}
+
+.col25 > label {
+	margin-top: 4px;
+	position: fixed;
+}
+
+.col75 {
+	width: 75% !important;
+}
+
+.col75 > input {
+	width: 98% !important;
+}
+
+.col75 > span {
+	width: 100% !important;
+}
+
+.col75 > span > input {
+	width: 98% !important;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:tnbc="http://tnb.org.tr/ui"
+      xmlns:p="http://primefaces.org/ui" xml:lang="tr" lang="tr">
+<h:head>
+    <title><ui:insert name="title">TT Project</ui:insert></title>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <h:outputStylesheet library="css" name="reset.css" />
+        <h:outputStylesheet library="css" name="style.css" />
+        <h:outputScript library="js" name="util.js" />
+    </f:facet>
+    <style>
+        .ui-blockui-content {
+            background: transparent !important;
+            box-shadow: initial !important;
+            border: 0 !important;
+        }
+    </style>
+</h:head>
+
+
+<f:view locale="tr">
+    <h:body id="entirePage">
+        <div class="layout-wrapper layout-vertical">
+            <ui:include src="menu.xhtml"/>
+
+            <div class="layout-content">
+
+                <div class="layout-content-container">
+                    <p:outputPanel style="padding-right: 20px;padding-left: 20px;">
+                        <h:form id="form">
+                        <p:growl id="growl"  />
+                            <ui:insert name="pageContent"/>
+                            <p:blockUI block=":entirePage" id="bui" widgetVar="bui">
+                                <p:graphicImage library="img" style="height:200px !important; width:200px !important;" name="tenor.gif"/>
+                            </p:blockUI>
+                        </h:form>
+                    </p:outputPanel>
+                </div>
+            </div>
+        </div>
+
+        <h:form id="dialogForm">
+            <ui:insert name="dialogArea"></ui:insert>
+        </h:form>
+    </h:body>
+</f:view>
+
+</html>

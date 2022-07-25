@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pa="http://primefaces.org/apollo">
+
+	<h:form id="menuForm" prependId="false">
+		<p:menubar styleClass="menuBar">
+			<p:menuitem value="Anasayfa" icon="fa fa-home" url="/anasayfa.xhtml" />
+			<p:menuitem value="Anket" icon="fa fa-home" url="/admin/anketBaslik.xhtml" rendered="#{loginController.login}" />
+			<p:menuitem value="Giriş" icon="fa fa-user-o" url="#" id="giris"
+				styleClass="girisMenuItem" style="display:#{!loginController.login ? 'inherit' : 'none' }"/>
+			<p:menuitem value="Çıkış" icon="fa fa-user-o" url="/logout" id="cikis"
+				styleClass="girisMenuItem" rendered="#{loginController.login}" />
+		</p:menubar>
+
+		<p:overlayPanel for="giris" showEffect="explode" hideEffect="explode" >
+		<p:panelGrid columns="1" layout="grid">
+				<p:inputText id="username" placeholder="Kullanıcı Adı"
+					autocomplete="off" />
+				<p:password id="password" placeholder="Şifre" autocomplete="off" />
+				<p:commandButton value="Giriş"
+					actionListener="#{loginController.login}" id="girisButon"
+					process="@this form" partialSubmit="true" style="width:100%" />
+				<p:commandButton value="Login" type="button" widgetVar="loginButton"
+					style="display:none" onclick="document.menuForm.submit();" />
+			</p:panelGrid>
+		</p:overlayPanel>
+	</h:form>
+
+</ui:composition>

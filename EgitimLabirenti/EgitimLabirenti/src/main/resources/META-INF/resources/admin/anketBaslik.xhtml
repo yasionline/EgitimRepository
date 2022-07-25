@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:tnb="http://tnb.org.tr/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/template/template.xhtml">
+    <ui:define name="pageContent">
+    	<p:panel header="Aktarım Başlık Listesi" >
+			<p:dataTable value="#{anketBaslikController.anketBaslikListe}" paginator="true" rows="20" emptyMessage="Gösterilecek Kayıt Bulunamamıştır" var="anketBaslik" paginatorPosition="bottom" lazy="true" id="anketBaslikTable" rowKey="#{anketBaslik.id}"
+			rowHover="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} kayıt"
+			rowsPerPageTemplate="20,50,100" selection="#{anketBaslikController.anketBaslik}" selectionMode="single">
+			<f:facet name="header">
+				<p:outputLabel value="Anket Listesi" />
+			</f:facet>
+			<p:column headerText="Ad" filterBy="#{anketBaslik.ad}" sortBy="#{anketBaslik.ad}" filterable="true" sortable="true">
+				<h:outputText value="#{anketBaslik.ad}" />
+			</p:column>
+			<p:column headerText="Başlangıç Tarih" sortBy="#{anketBaslik.baslangicTarih}" sortable="true">
+				<h:outputText value="#{anketBaslik.baslangicTarih}" converter="#{localDateTimeConverter}" />
+			</p:column>
+			<p:column headerText="Bitiş Tarih" sortBy="#{anketBaslik.bitisTarih}" sortable="true">
+				<h:outputText value="#{anketBaslik.bitisTarih}" converter="#{localDateTimeConverter}"/>
+			</p:column>
+			<p:column headerText="İşlemler" width="100">
+				<p:menuButton>
+					<p:menuitem value="Soru Listesi" process="@this" oncomplete="PF('soruCevapDialog').show()" update="dialogForm:soruCevapPanel" >
+						<f:setPropertyActionListener value="#{anketBaslik}" target="#{anketBaslikController.anketBaslik}"/>
+					</p:menuitem>
+				</p:menuButton>
+			</p:column>
+			<f:facet name="footer">
+				<p:panel id="butonlar">
+					<p:spacer height="22" />
+					<p:commandButton style="float:right" value="Yeni Kayıt" icon="fa fa-plus" process="@this" actionListener="#{anketBaslikController.yeni}" update="yeniGrid" id="yeniButton" />
+					<p:overlayPanel for="yeniButton" widgetVar="yeniOverlay" dismissable="false" showEffect="blind" hideEffect="blind" style="width:450px;" appendTo="body">
+						<p:panelGrid columns="2" layout="grid" id="yeniGrid" columnClasses="col25, col75" >
+							<p:outputLabel value="Ad :" />
+							<p:inputText value="#{anketBaslikController.anketBaslik.ad}" required="true" requiredMessage="Ad Zorunlu Alandır" />
+							<p:outputLabel value="Başlangıç Tarihi :" />
+							<p:calendar locale="tr" pattern="dd/MM/yyyy HH:mm" mask="true" value="#{anketBaslikController.anketBaslik.baslangicTarih}" />
+							<p:outputLabel value="Bitiş Tarihi :" />
+							<p:calendar locale="tr" pattern="dd/MM/yyyy HH:mm" mask="true" value="#{anketBaslikController.anketBaslik.bitisTarih}" />
+							<f:facet name="footer">
+								<p:spacer height="22" width="2" />
+								<p:commandButton process="@this yeniGrid" actionListener="#{anketBaslikController.kaydet}" value="Kaydet" icon="fa fa-save" style="width:40%; float:right" update="form:growl anketBaslikTable"  />
+							</f:facet>
+						</p:panelGrid>
+					</p:overlayPanel>
+				</p:panel>
+			</f:facet>
+		</p:dataTable>
+    	</p:panel>
+    </ui:define>
+    <ui:define name="dialogArea">
+    	<p:dialog widgetVar="soruCevapDialog" header="Soru Cevap Listesi" maximizable="true" minimizable="true" dynamic="true" draggable="true" closable="true" closeOnEscape="true" modal="true">
+			<p:panel id="soruCevapPanel">
+				<p:dataTable value="#{anketBaslikController.soruListesi}" paginator="true" rows="20" emptyMessage="Gösterilecek Kayıt Bulunamamıştır" var="soru" paginatorPosition="bottom" lazy="true" id="soruTable" rowKey="#{soru.id}"
+					rowHover="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} kayıt"
+					rowsPerPageTemplate="20,50,100" selection="#{anketBaslikController.soru}" selectionMode="single">
+					<p:column headerText="Soru">
+						<h:outputLabel value="#{soru.aciklama}" />
+					</p:column>
+					<p:column headerText="Tip" width="150">
+						<h:outputLabel value="#{soru.tip.tanim}" />
+					</p:column>
+					<p:column headerText="Sıra No" width="60">
+						<h:outputLabel value="#{soru.sira}" />
+					</p:column>
+					<p:column headerText="İşlemler" width="100">
+						<p:menuButton>
+							<p:menuitem value="Cevap Listesi" process="@this" oncomplete="PF('cevapDialog').show()" update="dialogForm:cevapPanel" >
+								<f:setPropertyActionListener value="#{soru}" target="#{anketBaslikController.soru}"/>
+							</p:menuitem>
+						</p:menuButton>
+					</p:column>
+					<f:facet name="footer">
+						<p:panel id="soruButonlar">
+							<p:spacer height="22" />
+							<p:commandButton style="float:right" value="Yeni Kayıt" icon="fa fa-plus" process="@this" actionListener="#{anketBaslikController.yeniSoru}" update="yeniSoruGrid" id="yeniSoruButton" />
+							<p:overlayPanel for="yeniSoruButton" widgetVar="yeniSoruOverlay" dismissable="false" showEffect="blind" hideEffect="blind" style="width:450px;" dynamic="true" appendTo="dialogForm" >
+								<p:panelGrid columns="2" layout="grid" id="yeniSoruGrid" columnClasses="col25, col75" >
+									<p:outputLabel value="Açıklama :" />
+									<p:inputText value="#{anketBaslikController.soru.aciklama}" required="true" requiredMessage="Açıklama Zorunlu Alandır" />
+									<p:outputLabel value="Soru Tip :" />
+									<p:selectOneMenu value="#{anketBaslikController.soru.tip}" converter="#{enumConverter}" required="true" requiredMessage="Soru Tipi Zorunludur" >
+										<f:selectItem itemLabel="Lütfen Seçiniz" itemValue="#{null}" />
+										<f:selectItems value="#{anketBaslikController.soruTipList}" var="soruTip" itemValue="#{soruTip}" itemLabel="#{soruTip.tanim}" />
+									</p:selectOneMenu>
+									<f:facet name="footer">
+										<p:spacer height="22" width="2" />
+										<p:commandButton process="@this yeniSoruGrid" actionListener="#{anketBaslikController.kaydetSoru}" value="Kaydet" icon="fa fa-save" style="width:40%; float:right" update="form:growl soruTable"  />
+									</f:facet>
+								</p:panelGrid>
+							</p:overlayPanel>
+						</p:panel>
+					</f:facet>
+				</p:dataTable>
+			</p:panel>
+    	</p:dialog>
+
+    	<p:dialog widgetVar="cevapDialog" header="Cevap Listesi" maximizable="true" minimizable="true" dynamic="true" draggable="true" closable="true" closeOnEscape="true" modal="true">
+			<p:panel id="cevapPanel">
+				<p:dataTable value="#{anketBaslikController.cevapListesi}" paginator="true" rows="20" emptyMessage="Gösterilecek Kayıt Bulunamamıştır" var="cevap" paginatorPosition="bottom" lazy="true" id="cevapTable" rowKey="#{cevap.id}"
+					rowHover="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} kayıt"
+					rowsPerPageTemplate="20,50,100" selection="#{anketBaslikController.cevap}" selectionMode="single">
+					<p:column headerText="Cevap">
+						<h:outputLabel value="#{cevap.tanim}" />
+					</p:column>
+					<p:column headerText="Baslik" width="150">
+						<h:outputLabel value="#{cevap.baslik}" />
+					</p:column>
+					<p:column headerText="İşlemler" width="100">
+						<p:menuButton>
+						</p:menuButton>
+					</p:column>
+					<f:facet name="footer">
+						<p:panel id="cevapButonlar">
+							<p:spacer height="22" />
+							<p:commandButton style="float:right" value="Yeni Kayıt" icon="fa fa-plus" process="@this" actionListener="#{anketBaslikController.yeniCevap}" update="yeniCevapGrid" id="yeniCevapButton" />
+							<p:overlayPanel for="yeniCevapButton" widgetVar="yeniCevapOverlay" dismissable="false" showEffect="blind" hideEffect="blind" style="width:450px;" dynamic="true" appendTo="dialogForm" >
+								<p:panelGrid columns="2" layout="grid" id="yeniCevapGrid" columnClasses="col25, col75" >
+									<p:outputLabel value="Açıklama :" />
+									<p:inputText value="#{anketBaslikController.cevap.tanim}" required="true" requiredMessage="Cevap Zorunlu Alandır" />
+									<p:outputLabel value="Başlık :" />
+									<p:inputText value="#{anketBaslikController.cevap.baslik}" required="true" requiredMessage="Başlık Zorunludur" />
+									<f:facet name="footer">
+										<p:spacer height="22" width="2" />
+										<p:commandButton process="@this yeniCevapGrid" actionListener="#{anketBaslikController.kaydetCevap}" value="Kaydet" icon="fa fa-save" style="width:40%; float:right" update="form:growl cevapTable"  />
+									</f:facet>
+								</p:panelGrid>
+							</p:overlayPanel>
+						</p:panel>
+					</f:facet>
+				</p:dataTable>
+			</p:panel>
+    	</p:dialog>
+    </ui:define>
+</ui:composition>
